@@ -2,9 +2,9 @@ Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/bionic64"
 
   # Flask
-  config.vm.network "forwarded_port", guest: 5000, host: 8080
+  config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+  # config.vm.network "forwarded_port", guest: 5000, host: 8080
   # Network settings
-  # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
   # config.vm.network "private_network", ip: "192.168.33.10"
   # config.vm.network "public_network"
 
@@ -15,17 +15,14 @@ Vagrant.configure(2) do |config|
   
 
     #folder Settings
-  #config.vm.synced_folder ".", "/var/www/"
+  config.vm.synced_folder ".", "/var/www/webapp"
 
 
       # Provider settings
   config.vm.provision "shell", inline: <<-SHELL
-  cd var/www/
-  git init
-  git pull https://github.com/johnmogi/webapp.git
-
-  ./deployment_script.sh
-    apt-get update
+  apt-get update
+  config.vm.provision "shell", path: "https://raw.githubusercontent.com/johnmogi/webapp/main/deployment_script.sh"
+  apt-get update
     apt-get install -y python
     apt-get install -y python3-venv
     apt install -y python3-flask
