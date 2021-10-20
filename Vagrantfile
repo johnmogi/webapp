@@ -15,23 +15,21 @@ Vagrant.configure(2) do |config|
   
 
     #folder Settings
-  config.vm.synced_folder ".", "/var/www/webapp"
+  #config.vm.synced_folder ".", "/var/www/"
 
 
       # Provider settings
   config.vm.provision "shell", inline: <<-SHELL
-  cd var/www/webapp
+  cd var/www/
+  git init
+  git pull https://github.com/johnmogi/webapp.git
+
+  ./deployment_script.sh
     apt-get update
     apt-get install -y python
     apt-get install -y python3-venv
     apt install -y python3-flask
     apt install -y python3-pip
-    python3 -m venv venv
-    python3 -m venv flask
-    ./venv/Scripts/activate
-    pip3 install flask
-    export FLASK_APP=webapp
-    flask run
   SHELL
 
 end
